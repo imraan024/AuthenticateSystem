@@ -72,6 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'AuthSystem.wsgi.application'
 
 
+AUTH_USER_MODEL = "users.UserProfile"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
