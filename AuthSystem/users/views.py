@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView
+from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from .models import UserProfile
@@ -52,5 +52,29 @@ def logout_view(request):
     logout(request)
     return redirect('login/')
 
+class EditProfileView(UpdateView):
+    model = UserProfile
+    template_name = "registration/edit_profile.html"
+    success_url = reverse_lazy('user-info')
+    fields = ['first_name','last_name','phone']
 
+def EditProfile(request):
+    context={}
+    check = UserProfile.objects.filter(id=request.user.id)
+    if len(check)>0:
+        data = UserProfile.objects.get(id=request.user.id)
+        context["data"]=data
+    if request.method == "POST":
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        phone = request.POST["phone"]
+
+        user = UserProfile.objects.get(id=request.user.id)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.phone = phone
+        user.save()
+        context["status"] = "Changes Saved"
+        return redirect('/')
+    return render(request, "registration/edit_profile.html")
     

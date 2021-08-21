@@ -1,5 +1,5 @@
 from .models import UserProfile
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django import forms
@@ -39,4 +39,12 @@ class UserLoginForm(forms.ModelForm):
                 raise forms.ValidationError("Invalid Email or Password")
 
 
+class EditProfileForm(UserChangeForm):
+    first_name = forms.CharField(max_length=50, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'First Name'}))
+    last_name = forms.CharField(max_length=50,  widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'Last Name'}))
+    phone = forms.CharField(max_length=50, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'Phone'}))
+
+    class Meta:
+        model = UserProfile
+        fields = ('first_name','last_name','phone')
 
