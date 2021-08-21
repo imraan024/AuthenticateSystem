@@ -8,7 +8,7 @@
 {% block body %}
 <h1>Sign Up</h1>
 
-<form method = "POST">
+<form id = "register_form" method = "POST">
     {% csrf_token %}
    <p><label>Email: </label>{{ register_form.email }}</p> 
    <p><label>First Name: </label>{{ register_form.first_name }}</p> 
@@ -23,3 +23,32 @@
 <br>
 <a href = {% url 'login'  %} class="btn btn-success">Login</a>
 {% endblock %}
+
+<script type="text/javascript">
+    $(document).on('submit','#register_form', function(event){
+        event.preventDefault();
+        var signup_form_id = $("#register_form");
+        $.ajax({
+            url: "{% url 'register' %}",
+            data: signup_form_id.serialize(),
+            type: "POST",
+            datatype: "json",
+            header: {'X-CSRFToken': '{{ csrf_token }}'},
+            success: function(response){
+                var success = response['success']
+                if(success){
+                    alert("Form valid and User created succesfully!!");
+
+                }
+                else{
+                    console.log("response form with validation errors:" + response['form_html']);
+                    $("#crispy-form").replaceWith(response['form_html']);
+                }
+            },
+            failure: function(error){
+                alert("Error occured while requesting Djanog url");
+            }
+        });
+    });
+
+</script>

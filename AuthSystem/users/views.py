@@ -6,7 +6,9 @@ from .models import UserProfile
 from users.forms import SignUpForm, UserLoginForm 
 from django.contrib.auth.decorators import login_required
 
-
+#ajax validation
+# from jsonview.decorators import json_view
+# from django.template.context_processors import csrf
 #Create your views here.
 @login_required(login_url='login/')
 
@@ -15,6 +17,7 @@ def home(request):
 
 
 
+#@json_view 
 def register(request):
     context = {}
     if request.POST:
@@ -29,6 +32,19 @@ def register(request):
         form=SignUpForm()
         context['register_form']=form
     return render(request, 'registration/register.html', context)
+
+    # form = SignUpForm(request.POST or None)
+    # if form.is_valid():
+    #     form.save()
+    #     return {'succes' : True}
+
+    # context = {}
+    # context.update(csrf(request))
+    # form_html = render_crispy_form(form, context=context)
+    # return {'success':False, 'form_html': form_html}
+    
+
+
 
 
 def login_view(request):

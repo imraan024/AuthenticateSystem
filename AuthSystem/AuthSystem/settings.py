@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+
+    #for ajax validation
+    # 'crispy_forms',
+    # 'jsonview',
 ]
 
 MIDDLEWARE = [
