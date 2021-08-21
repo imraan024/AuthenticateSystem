@@ -1,0 +1,25 @@
+{% extends 'registration/base.html' %}
+
+{% block title %}
+        Register
+{% endblock %}
+
+
+{% block body %}
+<h1>Sign Up</h1>
+
+<form method = "POST">
+    {% csrf_token %}
+   <p><label>Email: </label>{{ register_form.email }}</p> 
+   <p><label>First Name: </label>{{ register_form.first_name }}</p> 
+   <p><label>Last Name: </label>{{ register_form.last_name }}</p>
+   <p><label>Phone No.: </label>{{ register_form.phone }}</p>
+   <p><label>Password: </label>{{ register_form.password1 }}</p>
+   <p><label>Confirm Password: </label>{{ register_form.password2 }}</p>
+    
+    <button class="btn btn-success">Register</button> <br>
+
+</form>
+<br>
+<a href = {% url 'login'  %} class="btn btn-success">Login</a>
+{% endblock %}
