@@ -66,13 +66,13 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login/')
+    return redirect('login')
 
-class EditProfileView(UpdateView):
-    model = UserProfile
-    template_name = "registration/edit_profile.html"
-    success_url = reverse_lazy('user-info')
-    fields = ['first_name','last_name','phone']
+# class EditProfileView(UpdateView):
+#     model = UserProfile
+#     template_name = "registration/edit_profile.html"
+#     success_url = reverse_lazy('user-info')
+#     fields = ['first_name','last_name','phone']
 
 def EditProfile(request):
     context={}
