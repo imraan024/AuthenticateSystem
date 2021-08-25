@@ -93,4 +93,26 @@ def EditProfile(request):
         context["status"] = "Changes Saved"
         return redirect('/')
     return render(request, "edit_profile.html")
+
+
+def sendEmailView(request):
+    return render(request, "send_mail.html")
+
+def verifiedView(request):
+    next = request.GET.get('next')
+    form = UserLoginForm(request.POST or None)
+    if form.is_valid():
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password')
+        user = authenticate(email=email, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect('/')
+
+    context = {
+        'login_form': form,
+    }
+    return render(request, "verified.html", context)
+    
     
