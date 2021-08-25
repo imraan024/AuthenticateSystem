@@ -9,6 +9,7 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(widget = forms.EmailInput(attrs = {'class': 'form-control', 'placeholder' : 'email'}))
     first_name = forms.CharField(max_length=50, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(max_length=50,  widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'Last Name'}))
+    phone = forms.IntegerField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder' : 'Phone'}))
     
     class Meta:
         model = UserProfile

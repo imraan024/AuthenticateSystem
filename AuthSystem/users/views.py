@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='login/')
 
 def home(request):
-    return render(request, "registration/user_information.html")
+    return render(request, "user_information.html")
 
 
 
@@ -31,7 +31,7 @@ def register(request):
     else:
         form=SignUpForm()
         context['register_form']=form
-    return render(request, 'registration/register.html', context)
+    return render(request, 'register.html', context)
 
     # form = SignUpForm(request.POST or None)
     # if form.is_valid():
@@ -62,7 +62,7 @@ def login_view(request):
     context = {
         'login_form': form,
     }
-    return render(request, "registration/login.html", context)
+    return render(request, "login.html", context)
 
 def logout_view(request):
     logout(request)
@@ -92,5 +92,5 @@ def EditProfile(request):
         user.save()
         context["status"] = "Changes Saved"
         return redirect('/')
-    return render(request, "registration/edit_profile.html")
+    return render(request, "edit_profile.html")
     
