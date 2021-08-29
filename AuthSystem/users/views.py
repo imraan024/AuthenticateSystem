@@ -7,6 +7,8 @@ from users.forms import SignUpForm, UserLoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import uuid
+from django.conf import settings  
+from django.core.mail import send_mail  
 
 #ajax validation
 # from jsonview.decorators import json_view
@@ -38,7 +40,7 @@ def register(request):
                 profile_obj = UserProfile.objects.create(email = email, first_name = first_name, last_name = last_name, phone = phone, auth_token = token )
                 profile_obj.set_password(password)
                 profile_obj.save()
-                print(token)   
+                sendMailAfterRagistration(email, token)   
                 return redirect("/send_mail")      
 
             except Exception as e:
@@ -46,14 +48,20 @@ def register(request):
         
                 # return redirect('login')
         context['register_form']=form
-        
-        
 
     else:
         form=SignUpForm()
         context['register_form']=form
     
     return render(request, 'register.html', context)
+
+def sendMailAfterRagistration(email, token):
+    subject = "Your account need to be verified"
+    message = "Hi! click the link to verify your account http://127.0.0.1:8000/verify/{token}"
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    send_mail(subject, message, email_from, recipient_list)
+
 
     # form = SignUpForm(request.POST or None)
     # if form.is_valid():
@@ -123,5 +131,5 @@ def sendEmailView(request):
 def verifiedView(request):
     
     return render(request, "verified.html")
-    
-    
+
+
