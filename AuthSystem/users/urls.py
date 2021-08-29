@@ -6,7 +6,8 @@ urlpatterns = [
     path('login/', views.login_view, name = "login"),
     path('logout', views.logout_view, name = "logout"),
     path('edit_profile', views.EditProfile, name= "edit"),
-    path('verified/', views.verifiedView, name = "verified"),
+    path('verified/<auth_token>', views.verifiedView, name = "verified"),
     path('send_mail/', views.sendEmailView, name = "send-email"),
+    path('error' , views.errorPage , name="error")
 
 ]

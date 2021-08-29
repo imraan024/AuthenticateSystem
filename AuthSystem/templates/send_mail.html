@@ -12,6 +12,8 @@
 <body>
     {% block body %}
         <h3>We've sent a link to your email. Please verify! </h3>
+
+        <a href="{% url 'login' %}"><button class="btn-btn-success">Log In</button></a>
     {% endblock %}
     
 </body>

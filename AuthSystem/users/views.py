@@ -35,18 +35,16 @@ def register(request):
                 last_name = request.POST.get('last_name')
                 phone = request.POST.get('phone')
                 password = request.POST.get('password1')
-                print(password)
-                token = str(uuid.uuid4)
-                profile_obj = UserProfile.objects.create(email = email, first_name = first_name, last_name = last_name, phone = phone, auth_token = token )
+                auth_token = str(uuid.uuid4())
+                profile_obj = UserProfile.objects.create(email = email, first_name = first_name, last_name = last_name, phone = phone, auth_token = auth_token )
                 profile_obj.set_password(password)
                 profile_obj.save()
-                sendMailAfterRagistration(email, token)   
+                print(auth_token)
+                sendMailAfterRagistration(email, auth_token)   
                 return redirect("/send_mail")      
 
             except Exception as e:
                 print(e)
-        
-                # return redirect('login')
         context['register_form']=form
 
     else:
@@ -57,11 +55,31 @@ def register(request):
 
 def sendMailAfterRagistration(email, token):
     subject = "Your account need to be verified"
-    message = "Hi! click the link to verify your account http://127.0.0.1:8000/verify/{token}"
+    message = f'Hi! click the link to verify your account http://127.0.0.1:8000/verified/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message, email_from, recipient_list)
 
+
+def verifiedView(request, auth_token):
+    try:
+        profile_obj = UserProfile.objects.filter(auth_token = auth_token).first()
+        if profile_obj:
+            if profile_obj.is_verified:
+                messages.success(request, 'Your account is already verified.')
+                return redirect('login')
+            profile_obj.is_verified = True
+            profile_obj.save()
+            messages.success(request, 'Your account has been verified.')
+            return redirect('login')
+        else:
+            return redirect('error')
+    
+    except Exception:
+        print(Exception)
+
+def errorPage(request):
+    return  render(request , 'error.html')
 
     # form = SignUpForm(request.POST or None)
     # if form.is_valid():
@@ -84,7 +102,10 @@ def login_view(request):
         email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password')
         user = authenticate(email=email, password=password)
-        login(request, user)
+        if user.is_verified == False:
+            messages.success(request, 'Check your Email to verify your Account!!')
+        else:
+            login(request, user)
         if next:
             return redirect(next)
         return redirect('/')
@@ -128,8 +149,6 @@ def EditProfile(request):
 def sendEmailView(request):
     return render(request, "send_mail.html")
 
-def verifiedView(request):
-    
-    return render(request, "verified.html")
+
 
 
