@@ -42,6 +42,11 @@ class UserProfile(AbstractBaseUser):
     is_staff= models.BooleanField(default=False)
     is_superuser= models.BooleanField(default=False)
 
+    auth_token = models.CharField(max_length=200)
+    is_verified = models.BooleanField(default = False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
     USERNAME_FIELD="email"
 
     #REQUIRED_FIELDS=['']

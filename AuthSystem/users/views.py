@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from .models import UserProfile
 from users.forms import SignUpForm, UserLoginForm 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+import uuid
 
 #ajax validation
 # from jsonview.decorators import json_view
@@ -20,17 +22,37 @@ def home(request):
 #@json_view 
 def register(request):
     context = {}
+
     if request.POST:
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            
+            try:
+                email = request.POST.get('email')
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                phone = request.POST.get('phone')
+                password = request.POST.get('password1')
+                print(password)
+                token = str(uuid.uuid4)
+                profile_obj = UserProfile.objects.create(email = email, first_name = first_name, last_name = last_name, phone = phone, auth_token = token )
+                profile_obj.set_password(password)
+                profile_obj.save()
+                print(token)   
+                return redirect("/send_mail")      
 
+            except Exception as e:
+                print(e)
+        
+                # return redirect('login')
         context['register_form']=form
+        
+        
 
     else:
         form=SignUpForm()
         context['register_form']=form
+    
     return render(request, 'register.html', context)
 
     # form = SignUpForm(request.POST or None)
@@ -99,20 +121,7 @@ def sendEmailView(request):
     return render(request, "send_mail.html")
 
 def verifiedView(request):
-    next = request.GET.get('next')
-    form = UserLoginForm(request.POST or None)
-    if form.is_valid():
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password')
-        user = authenticate(email=email, password=password)
-        login(request, user)
-        if next:
-            return redirect(next)
-        return redirect('/')
-
-    context = {
-        'login_form': form,
-    }
-    return render(request, "verified.html", context)
+    
+    return render(request, "verified.html")
     
     
